@@ -4,9 +4,10 @@
 #include "DaisyDuino.h"
 #include "IEffect.h"
 #include "Bypass\Bypass.h"
+#include "SingleEcho\SingleEcho.h"
 
-// Effect Objects
 Bypass bypass;
+SingleEcho singleEcho;
 
 /**
  * The rotary encoder is using Gray code, not standard hex.
@@ -15,8 +16,11 @@ Bypass bypass;
  */
 enum EffectType {
     BYPASS = 0,
+    SINGLEECHO = 1,
 
-    // Add effect types here
+    // Possible future effects
+    DOUBLEECHO = 3,
+    DOUBLER = 4,
 
     UNSET = 99
 };
@@ -28,6 +32,8 @@ extern IEffect* GetEffectObject(EffectType type)
 {
     switch(type)
     {
+        case SINGLEECHO:
+            return (IEffect*)&singleEcho;
         case BYPASS:
         case UNSET:
         default:
