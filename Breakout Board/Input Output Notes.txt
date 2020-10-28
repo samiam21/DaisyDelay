@@ -1,0 +1,16 @@
+INPUTS/OUTPUTS:
+
+Off-Board
+- SPST momentary switches (4)
+- SPDT toggle switches (2)
+- 10K linear potentiometer (4)
+- Rotary 1P8T switch (1)
+- TS mono jack (4)
+- LEDs (4)
+
+On-Board
+- 9v power (1)
+- SPST switch pull-down resistors (4)
+- SPDT switch pull-down resistors (4)
+- 1P8T switch pull-down resistors (8)
+- LED resistors (4)
