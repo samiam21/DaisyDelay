@@ -35,6 +35,13 @@ void SingleEcho::Setup(size_t pNumChannels)
     // Initialize the level
     levelKnobReading = analogRead(levelKnobPin);
     SetLevelValue(levelKnobReading);
+
+    // Initialize the type pins
+    pinMode(typeSwitcherPin1, INPUT);
+    pinMode(typeSwitcherPin2, INPUT);
+    pinMode(quarterDelayLedPin, OUTPUT);
+    pinMode(dottedEighthLedPin, OUTPUT);
+    pinMode(tripletLedPin, OUTPUT);
 }
 
 // Clean up the parameters for mono delay
@@ -75,6 +82,9 @@ void SingleEcho::Loop()
 
     // Handle level
     LevelLoopControl();
+
+    // Handle type
+    TypeSwitcherLoopControl();
 }
 
 // Handle reading the decay knob and setting the decay
@@ -198,7 +208,16 @@ void SingleEcho::TapTempoLoopControl()
     }
 }
 
+// Return the effect name (for debugging)
 String SingleEcho::GetEffectName()
 {
     return "SingleEcho";
+}
+
+// Handle reading the SPDT switch and setting the delay type
+void SingleEcho::TypeSwitcherLoopControl()
+{
+    // Read the type pins
+    int newType = digitalRead(typeSwitcherPin1) + digitalRead(typeSwitcherPin2);
+    debugPrint(newType);
 }
