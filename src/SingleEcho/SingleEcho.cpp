@@ -217,7 +217,53 @@ String SingleEcho::GetEffectName()
 // Handle reading the SPDT switch and setting the delay type
 void SingleEcho::TypeSwitcherLoopControl()
 {
-    // Read the type pins
-    int newType = digitalRead(typeSwitcherPin1) + digitalRead(typeSwitcherPin2);
-    debugPrint(newType);
+    // Determine which type is selected
+    if (digitalRead(typeSwitcherPin1) == HIGH)
+    {
+        // Only set the type if we have a new one
+        if (currentDelayType != QUARTER)
+        {
+            currentDelayType = QUARTER;
+            debugPrint("Changing to quarter note delay");
+
+            // Turn off other LEDs
+            analogWrite(tripletLedPin, 0);
+            analogWrite(dottedEighthLedPin, 0);
+
+            // Turn on QUARTER LED
+            analogWrite(quarterDelayLedPin, ledIntensity);
+        }
+    }
+    else if (digitalRead(typeSwitcherPin2) == HIGH)
+    {
+        // Only set the type if we have a new one
+        if (currentDelayType != TRIPLET)
+        {
+            currentDelayType = TRIPLET;
+            debugPrint("Changing to triplet note delay");
+
+            // Turn off other LEDs
+            analogWrite(quarterDelayLedPin, 0);
+            analogWrite(dottedEighthLedPin, 0);
+
+            // Turn on QUARTER LED
+            analogWrite(tripletLedPin, ledIntensity);
+        }
+    }
+    else
+    {
+        // Only set the type if we have a new one
+        if (currentDelayType != DOTTED_EIGHTH)
+        {
+            currentDelayType = DOTTED_EIGHTH;
+            debugPrint("Changing to dotted eighth note delay");
+
+            // Turn off other LEDs
+            analogWrite(tripletLedPin, 0);
+            analogWrite(quarterDelayLedPin, 0);
+
+            // Turn on QUARTER LED
+            analogWrite(dottedEighthLedPin, ledIntensity);
+        }
+    }
 }

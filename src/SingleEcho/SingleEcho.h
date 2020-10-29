@@ -42,6 +42,7 @@ static const int tripletLedPin = effectLedPin3;
 static const int audioInChannel = 0;
 static const int audioOutChannel = 0;
 static const size_t delayMaxSize = 96000;
+static const size_t ledIntensity = 128;
 
 // Tap tempo constants
 static const long tapTempoDebounce = 300;
