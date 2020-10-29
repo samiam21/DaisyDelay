@@ -21,8 +21,8 @@ void SingleEcho::Setup(size_t pNumChannels)
     del_line.Init();
 
     // Set Delay Time in Samples
-    size_t tempoSamples = (96000 / tempoBpm) * 30;
-    del_line.SetDelay(tempoSamples);
+    currentTempoSamples = ((96000 / initialTempoBpm) * 30) * tempoModifier;
+    del_line.SetDelay(currentTempoSamples);
 
     // Initialize the tap tempo button
     pinMode(tapTempoButtonPin, INPUT);
@@ -35,6 +35,13 @@ void SingleEcho::Setup(size_t pNumChannels)
     // Initialize the level
     levelKnobReading = analogRead(levelKnobPin);
     SetLevelValue(levelKnobReading);
+
+    // Initialize the type pins
+    pinMode(typeSwitcherPin1, INPUT);
+    pinMode(typeSwitcherPin2, INPUT);
+    pinMode(quarterDelayLedPin, OUTPUT);
+    pinMode(dottedEighthLedPin, OUTPUT);
+    pinMode(tripletLedPin, OUTPUT);
 }
 
 // Clean up the parameters for mono delay
@@ -75,6 +82,9 @@ void SingleEcho::Loop()
 
     // Handle level
     LevelLoopControl();
+
+    // Handle type
+    TypeSwitcherLoopControl();
 }
 
 // Handle reading the decay knob and setting the decay
@@ -183,8 +193,8 @@ void SingleEcho::TapTempoLoopControl()
             unsigned long avg = tempoArray.average();
 
             // Set the new delay based on the calculated duration
-            size_t tempoSamples = (96000 * (size_t)avg) / 2000;
-            del_line.SetDelay(tempoSamples);
+            currentTempoSamples = ((96000 * (size_t)avg) / 2000) * tempoModifier;
+            del_line.SetDelay(currentTempoSamples);
         } 
         else
         {
@@ -198,7 +208,80 @@ void SingleEcho::TapTempoLoopControl()
     }
 }
 
+// Return the effect name (for debugging)
 String SingleEcho::GetEffectName()
 {
     return "SingleEcho";
+}
+
+// Handle reading the SPDT switch and setting the delay type
+void SingleEcho::TypeSwitcherLoopControl()
+{
+    // Determine which type is selected
+    if (digitalRead(typeSwitcherPin1) == HIGH)
+    {
+        // Only set the type if we have a new one
+        if (currentDelayType != QUARTER)
+        {
+            debugPrint("Changing to quarter note delay");
+
+            // Set the delay type and tempo modifier
+            currentDelayType = QUARTER;
+            tempoModifier = 1.0f;
+            
+            // Update the delay tempo
+            del_line.SetDelay(currentTempoSamples * tempoModifier);
+
+            // Turn off other LEDs
+            analogWrite(tripletLedPin, 0);
+            analogWrite(dottedEighthLedPin, 0);
+
+            // Turn on QUARTER LED
+            analogWrite(quarterDelayLedPin, ledIntensity);
+        }
+    }
+    else if (digitalRead(typeSwitcherPin2) == HIGH)
+    {
+        // Only set the type if we have a new one
+        if (currentDelayType != TRIPLET)
+        {
+            debugPrint("Changing to triplet note delay");
+
+            // Set the delay type and tempo modifier
+            currentDelayType = TRIPLET;
+            tempoModifier = 0.333f;
+
+            // Update the delay tempo
+            del_line.SetDelay(currentTempoSamples * tempoModifier);
+
+            // Turn off other LEDs
+            analogWrite(quarterDelayLedPin, 0);
+            analogWrite(dottedEighthLedPin, 0);
+
+            // Turn on QUARTER LED
+            analogWrite(tripletLedPin, ledIntensity);
+        }
+    }
+    else
+    {
+        // Only set the type if we have a new one
+        if (currentDelayType != DOTTED_EIGHTH)
+        {
+            debugPrint("Changing to dotted eighth note delay");
+
+            // Set the delay type and tempo modifier
+            currentDelayType = DOTTED_EIGHTH;
+            tempoModifier = 0.75f;
+
+            // Update the delay tempo
+            del_line.SetDelay(currentTempoSamples * tempoModifier);
+
+            // Turn off other LEDs
+            analogWrite(tripletLedPin, 0);
+            analogWrite(quarterDelayLedPin, 0);
+
+            // Turn on QUARTER LED
+            analogWrite(dottedEighthLedPin, ledIntensity);
+        }
+    }
 }
