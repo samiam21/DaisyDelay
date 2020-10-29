@@ -21,8 +21,8 @@ void SingleEcho::Setup(size_t pNumChannels)
     del_line.Init();
 
     // Set Delay Time in Samples
-    size_t tempoSamples = (96000 / tempoBpm) * 30;
-    del_line.SetDelay(tempoSamples);
+    currentTempoSamples = ((96000 / initialTempoBpm) * 30) * tempoModifier;
+    del_line.SetDelay(currentTempoSamples);
 
     // Initialize the tap tempo button
     pinMode(tapTempoButtonPin, INPUT);
@@ -193,8 +193,8 @@ void SingleEcho::TapTempoLoopControl()
             unsigned long avg = tempoArray.average();
 
             // Set the new delay based on the calculated duration
-            size_t tempoSamples = (96000 * (size_t)avg) / 2000;
-            del_line.SetDelay(tempoSamples);
+            currentTempoSamples = ((96000 * (size_t)avg) / 2000) * tempoModifier;
+            del_line.SetDelay(currentTempoSamples);
         } 
         else
         {
@@ -223,8 +223,14 @@ void SingleEcho::TypeSwitcherLoopControl()
         // Only set the type if we have a new one
         if (currentDelayType != QUARTER)
         {
-            currentDelayType = QUARTER;
             debugPrint("Changing to quarter note delay");
+
+            // Set the delay type and tempo modifier
+            currentDelayType = QUARTER;
+            tempoModifier = 1.0f;
+            
+            // Update the delay tempo
+            del_line.SetDelay(currentTempoSamples * tempoModifier);
 
             // Turn off other LEDs
             analogWrite(tripletLedPin, 0);
@@ -239,8 +245,14 @@ void SingleEcho::TypeSwitcherLoopControl()
         // Only set the type if we have a new one
         if (currentDelayType != TRIPLET)
         {
-            currentDelayType = TRIPLET;
             debugPrint("Changing to triplet note delay");
+
+            // Set the delay type and tempo modifier
+            currentDelayType = TRIPLET;
+            tempoModifier = 0.333f;
+
+            // Update the delay tempo
+            del_line.SetDelay(currentTempoSamples * tempoModifier);
 
             // Turn off other LEDs
             analogWrite(quarterDelayLedPin, 0);
@@ -255,8 +267,14 @@ void SingleEcho::TypeSwitcherLoopControl()
         // Only set the type if we have a new one
         if (currentDelayType != DOTTED_EIGHTH)
         {
-            currentDelayType = DOTTED_EIGHTH;
             debugPrint("Changing to dotted eighth note delay");
+
+            // Set the delay type and tempo modifier
+            currentDelayType = DOTTED_EIGHTH;
+            tempoModifier = 0.75f;
+
+            // Update the delay tempo
+            del_line.SetDelay(currentTempoSamples * tempoModifier);
 
             // Turn off other LEDs
             analogWrite(tripletLedPin, 0);

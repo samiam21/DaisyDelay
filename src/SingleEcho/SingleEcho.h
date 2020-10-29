@@ -19,7 +19,7 @@
  * 
  * Knob 1 - Effect Level
  * Knob 2 - Decay
- * Knob 3 - Mix
+ * Knob 3 - N/U
  * Knob 4 - N/U
  * 
  * LED 1 - Quarter
@@ -46,6 +46,7 @@ static const size_t ledIntensity = 128;
 
 // Tap tempo constants
 static const long tapTempoDebounce = 300;
+static const size_t initialTempoBpm = 90;
 
 // Decay constants
 static const int decayKnobFlutter = 10;
@@ -89,7 +90,7 @@ class SingleEcho: public IEffect
         DelayLine<float, delayMaxSize> del_line;
 
         // Tap tempo mutables
-        size_t tempoBpm = 90;
+        size_t currentTempoSamples;
         unsigned long tapTempoTime = 0;
         TempoArray tempoArray;
 
@@ -103,6 +104,7 @@ class SingleEcho: public IEffect
 
         // Type switcher mutables
         DelayType currentDelayType = QUARTER;
+        float tempoModifier = 1.0f;
 };
 
 #endif
