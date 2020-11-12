@@ -1,6 +1,6 @@
-#include "Bypass.h"
+#include "HWTest.h"
 
-void Bypass::Setup(size_t pNumChannels)
+void HWTest::Setup(size_t pNumChannels)
 {
     numChannels = pNumChannels;
 
@@ -18,18 +18,18 @@ void Bypass::Setup(size_t pNumChannels)
     pinMode(effectLedPin3, OUTPUT);
 }
 
-void Bypass::AudioCallback(float **in, float **out, size_t size)
+void HWTest::AudioCallback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
         for (size_t chn = 0; chn < numChannels; chn++)
         {
-            out[chn][i] = in[chn][i];
+            out[audioOutChannel][i] = in[audioInChannel][i];
         }
     }
 }
 
-void Bypass::Cleanup()
+void HWTest::Cleanup()
 {
     // Turn off the LEDs
     debugPrint("Turning off LEDs");
@@ -41,7 +41,7 @@ void Bypass::Cleanup()
     digitalWrite(effectLedPin3, LOW);
 }
 
-void Bypass::Loop()
+void HWTest::Loop()
 {
     // SPDT controls whether the LEDs are turned on by buttons or POTs
     if (digitalRead(effectSPDT1Pin1) == HIGH)
@@ -95,7 +95,7 @@ void Bypass::Loop()
     }
 }
 
-String Bypass::GetEffectName()
+String HWTest::GetEffectName()
 {
-    return "Bypass";
+    return "Hardware Test";
 }

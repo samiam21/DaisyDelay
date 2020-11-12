@@ -1,9 +1,11 @@
 #ifndef PEDAL_CONFIG_H
 #define PEDAL_CONFIG_H
 
+#include "DaisyDuino.h"
+
 #define DEBUG 1
 
-#define initDebugPrint() {if(DEBUG) Serial.begin();}
+#define initDebugPrint() {if(DEBUG) Serial.begin(9600);}
 #define debugPrint(msg) {if(DEBUG) Serial.println(msg);}
 
 const int controlLedPin = LED_BUILTIN; // Built in LED is LED_BUILTIN

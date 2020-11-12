@@ -2,8 +2,8 @@
 #define SINGLE_ECHO
 
 #include "DaisyDuino.h"
-#include "../../PedalConfig.h"
-#include "../IEffect.h"
+#include "../../include/IEffect.h"
+#include "../../include/PedalConfig.h"
 #include "TempoArray.h"
 
 /**********************************************
@@ -39,8 +39,6 @@ static const int dottedEighthLedPin = effectLedPin2;
 static const int tripletLedPin = effectLedPin3;
 
 // Constant parameters
-static const int audioInChannel = 0;
-static const int audioOutChannel = 0;
 static const size_t delayMaxSize = 96000;
 static const size_t ledIntensity = 128;
 
@@ -105,6 +103,10 @@ class SingleEcho: public IEffect
         // Type switcher mutables
         DelayType currentDelayType = QUARTER;
         float tempoModifier = 1.0f;
+
+        // Audio channels
+        const int audioInChannel = 0;
+        const int audioOutChannel = 0;
 };
 
 #endif

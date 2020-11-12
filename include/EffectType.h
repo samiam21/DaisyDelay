@@ -3,10 +3,11 @@
 
 #include "DaisyDuino.h"
 #include "IEffect.h"
-#include "Bypass\Bypass.h"
-#include "SingleEcho\SingleEcho.h"
+#include "../lib/HWTest/HWTest.h"
+#include "../lib/SingleEcho/SingleEcho.h"
 
-Bypass bypass;
+// Effect Objects
+HWTest hwTest;
 SingleEcho singleEcho;
 
 /**
@@ -15,7 +16,7 @@ SingleEcho singleEcho;
  * 0, 1, 3, 2, 6, 7, 5, 4, 12, 13, 15, 14, 10, 11, 9, 8
  */
 enum EffectType {
-    BYPASS = 0,
+    HWTEST = 0,
     SINGLEECHO = 1,
 
     // Possible future effects
@@ -34,10 +35,10 @@ extern IEffect* GetEffectObject(EffectType type)
     {
         case SINGLEECHO:
             return (IEffect*)&singleEcho;
-        case BYPASS:
+        case HWTEST:
         case UNSET:
         default:
-            return (IEffect*)&bypass;
+            return (IEffect*)&hwTest;
     }
 };
 
