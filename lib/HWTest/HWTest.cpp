@@ -24,7 +24,7 @@ void HWTest::AudioCallback(float **in, float **out, size_t size)
     {
         for (size_t chn = 0; chn < numChannels; chn++)
         {
-            out[audioOutChannel][i] = in[audioInChannel][i];
+            out[chn][i] = in[chn][i];
         }
     }
 }

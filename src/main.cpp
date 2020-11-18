@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <bitset>
 #include "DaisyDuino.h"
 #include "EffectType.h"
 #include "PedalConfig.h"
@@ -11,24 +10,26 @@ size_t num_channels;
 // Effect switching parameters
 volatile EffectType currentEffectType = UNSET;
 volatile EffectType selectedEffectType = UNSET;
-IEffect* currentEffect;
+IEffect *currentEffect;
 
 /**
  * Sets the selected effect type based on reading the selector
  */
-void ReadSelectedEffect() {
-    // Read the state of the hex switch pins
-    std::bitset<4> pin1(digitalRead(effectSelectorPin1));
-    std::bitset<4> pin2(digitalRead(effectSelectorPin2));
-    std::bitset<4> pin3(digitalRead(effectSelectorPin3));
-    std::bitset<4> pin4(digitalRead(effectSelectorPin4));    
+void ReadSelectedEffect()
+{
+    // Read the state of the encoder pins
+    uint32_t pin1 = (uint32_t)digitalRead(effectSelectorPin1);
+    uint32_t pin2 = (uint32_t)digitalRead(effectSelectorPin2);
+    uint32_t pin3 = (uint32_t)digitalRead(effectSelectorPin3);
+    uint32_t pin4 = (uint32_t)digitalRead(effectSelectorPin4);
 
-    // Get the combined hex value and convert it to an int
-    std::bitset<4> combined = pin1 | (pin2 << 1) | (pin3 << 2) | (pin4 << 3);
-    selectedEffectType = (EffectType)(combined.to_ulong());
+    // Get the combined value and set the effect type
+    uint32_t combined = pin4 | (pin3 << 1) | (pin2 << 2) | (pin1 << 3);
+    selectedEffectType = (EffectType)(combined);
 }
 
-void setup() {
+void setup()
+{
     // // Initialize the serial debug output
     initDebugPrint();
     debugPrint("Starting DaisyPedal...");
@@ -63,7 +64,8 @@ void setup() {
     digitalWrite(controlLedPin, HIGH);
 }
 
-void loop() {
+void loop()
+{
     // Check if we have a new effect type and switch to the new state
     if (currentEffectType != selectedEffectType)
     {
@@ -71,12 +73,12 @@ void loop() {
         currentEffect->Cleanup();
 
         // Get the new effect object
-        currentEffect = GetEffectObject(selectedEffectType);        
+        currentEffect = GetEffectObject(selectedEffectType);
 
         // Start the new effect
         debugPrint("Switching to: " + currentEffect->GetEffectName());
         currentEffect->Setup(num_channels);
-        DAISY.begin((DaisyDuinoCallback)[](float **in, float **out, size_t size) {return currentEffect->AudioCallback(in, out, size);});
+        DAISY.begin((DaisyDuinoCallback)[](float **in, float **out, size_t size) { return currentEffect->AudioCallback(in, out, size); });
 
         // Update the current effect type now that we have switched
         currentEffectType = selectedEffectType;
