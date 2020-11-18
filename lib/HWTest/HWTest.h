@@ -1,11 +1,11 @@
-#ifndef BYPASS_H
-#define BYPASS_H
+#ifndef HWTEST_H
+#define HWTEST_H
 
 #include "DaisyDuino.h"
-#include "../IEffect.h"
-#include "../../PedalConfig.h"
+#include "../../include/IEffect.h"
+#include "../../include/PedalConfig.h"
 
-class Bypass: public IEffect
+class HWTest: public IEffect
 {
     public:
         void Setup(size_t pNumChannels);
@@ -18,6 +18,8 @@ class Bypass: public IEffect
         size_t numChannels;
         const int LED_MAX_VALUE = 256;
         const int LED_MIN_VALUE = 0;
+        const int audioInChannel = 0;
+        const int audioOutChannel = 0;
 };
 
 #endif
