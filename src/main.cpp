@@ -46,14 +46,10 @@ void setup()
 
     // Attach interrupts to each of the encoder pins
     //  the encoder is grey coded so only one of these will happen at a time
-    attachInterrupt(effectSelectorPin1, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin1, ReadSelectedEffect, RISING);
-    attachInterrupt(effectSelectorPin2, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin2, ReadSelectedEffect, RISING);
-    attachInterrupt(effectSelectorPin3, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin3, ReadSelectedEffect, RISING);
-    attachInterrupt(effectSelectorPin4, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin4, ReadSelectedEffect, RISING);
+    attachInterrupt(effectSelectorPin1, ReadSelectedEffect, CHANGE);
+    attachInterrupt(effectSelectorPin2, ReadSelectedEffect, CHANGE);
+    attachInterrupt(effectSelectorPin3, ReadSelectedEffect, CHANGE);
+    attachInterrupt(effectSelectorPin4, ReadSelectedEffect, CHANGE);
 
     // Read and set the selected effect
     ReadSelectedEffect();
