@@ -6,7 +6,7 @@
 #define DEBUG 1
 
 // NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
-// #define BYPASS_SELECTOR // Bypasses the effect selector
+#define BYPASS_SELECTOR // Bypasses the effect selector
 
 #define initDebugPrint()        \
     {                           \

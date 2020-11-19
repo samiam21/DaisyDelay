@@ -15,7 +15,8 @@ SingleEcho singleEcho;
  * The sequence of decimal numbers that it produces is as follows:
  * 0, 1, 3, 2, 6, 7, 5, 4, 12, 13, 15, 14, 10, 11, 9, 8
  */
-enum EffectType {
+enum EffectType
+{
     HWTEST = 0,
     SINGLEECHO = 1,
 
@@ -29,16 +30,16 @@ enum EffectType {
 /**
  * Returns the effect object based on the passed in enum
  */
-extern IEffect* GetEffectObject(EffectType type)
+extern IEffect *GetEffectObject(EffectType type)
 {
-    switch(type)
+    switch (type)
     {
-        case SINGLEECHO:
-            return (IEffect*)&singleEcho;
-        case HWTEST:
-        case UNSET:
-        default:
-            return (IEffect*)&hwTest;
+    case SINGLEECHO:
+        return (IEffect *)&singleEcho;
+    case HWTEST:
+    case UNSET:
+    default:
+        return (IEffect *)&hwTest;
     }
 };
 

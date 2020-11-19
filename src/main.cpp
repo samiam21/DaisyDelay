@@ -8,8 +8,8 @@ DaisyHardware hw;
 size_t num_channels;
 
 // Effect switching parameters
-volatile EffectType currentEffectType = UNSET;
-volatile EffectType selectedEffectType = UNSET;
+volatile EffectType currentEffectType = SINGLEECHO;
+volatile EffectType selectedEffectType = SINGLEECHO;
 IEffect *currentEffect;
 
 /**
@@ -58,6 +58,11 @@ void setup()
 
     // Set the current effect
     currentEffect = GetEffectObject(selectedEffectType);
+
+    // Start the effect
+    debugPrint("Starting: " + currentEffect->GetEffectName());
+    currentEffect->Setup(num_channels);
+    DAISY.begin((DaisyDuinoCallback)[](float **in, float **out, size_t size) { return currentEffect->AudioCallback(in, out, size); });
 
     // Initialize and turn on the control LED
     pinMode(controlLedPin, OUTPUT);
