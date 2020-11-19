@@ -3,7 +3,7 @@
 <eagle version="9.6.2">
 <drawing>
 <settings>
-<setting alwaysvectorfont="no"/>
+<setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="50" unitdist="mil" unit="inch" style="lines" multiple="1" display="yes" altdistance="5" altunitdist="mil" altunit="mil"/>
@@ -155,9 +155,9 @@
 <wire x1="68.25" y1="0" x2="68.25" y2="58.41" width="0" layer="20"/>
 <wire x1="68.25" y1="58.41" x2="0" y2="58.41" width="0" layer="20"/>
 <wire x1="0" y1="58.41" x2="0" y2="0" width="0" layer="20"/>
-<text x="1.27" y="8.89" size="1.016" layer="21">Pedal Breakout Board
+<text x="2.54" y="8.89" size="1.016" layer="21">Pedal Board
 REV: A</text>
-<text x="1.27" y="12.7" size="1.778" layer="21">Saved
+<text x="2.54" y="12.7" size="1.778" layer="21">Saved
 By Grace
 Software</text>
 </plain>
@@ -1016,7 +1016,7 @@ design rules under a new name.</description>
 <attribute name="VALUE" x="5.842" y="22.86" size="0.6096" layer="27" font="vector" ratio="20" rot="R90"/>
 </element>
 <element name="HEX_PWR" library="SparkFun-Connectors" library_urn="urn:adsk.eagle:library:513" package="1X01" package3d_urn="urn:adsk.eagle:package:38028/1" value="" x="60.96" y="35.56" smashed="yes">
-<attribute name="NAME" x="59.69" y="36.957" size="0.6096" layer="25" font="vector" ratio="20"/>
+<attribute name="NAME" x="59.69" y="33.147" size="0.6096" layer="25" font="vector" ratio="20"/>
 <attribute name="VALUE" x="59.69" y="34.036" size="0.6096" layer="27" font="vector" ratio="20" align="top-left"/>
 </element>
 <element name="LED_GPIO" library="SparkFun-Connectors" library_urn="urn:adsk.eagle:library:513" package="1X04" package3d_urn="urn:adsk.eagle:package:38085/1" value="" x="60.96" y="17.78" smashed="yes" rot="R270">
@@ -1131,18 +1131,6 @@ design rules under a new name.</description>
 <wire x1="60.96" y1="40.64" x2="60.96" y2="43.18" width="0.6096" layer="16"/>
 <wire x1="60.96" y1="43.18" x2="60.96" y2="45.72" width="0.6096" layer="16"/>
 <wire x1="60.96" y1="48.26" x2="60.96" y2="45.72" width="0.6096" layer="16"/>
-<polygon width="0.1524" layer="1" isolate="0.3048">
-<vertex x="68.58" y="0"/>
-<vertex x="68.58" y="58.42"/>
-<vertex x="0" y="58.42"/>
-<vertex x="0" y="0"/>
-</polygon>
-<polygon width="0.1524" layer="16" isolate="0.3048">
-<vertex x="0" y="58.42"/>
-<vertex x="0" y="0"/>
-<vertex x="68.58" y="0"/>
-<vertex x="68.58" y="58.42"/>
-</polygon>
 <contactref element="C1" pad="2"/>
 <contactref element="C2" pad="2"/>
 <wire x1="58.42" y1="52.07" x2="54.63" y2="55.86" width="0.6096" layer="16"/>
@@ -1173,6 +1161,18 @@ design rules under a new name.</description>
 <wire x1="26.67" y1="3.81" x2="43.18" y2="3.81" width="0.6096" layer="16"/>
 <wire x1="43.18" y1="3.81" x2="45.72" y2="6.35" width="0.6096" layer="16"/>
 <wire x1="45.72" y1="6.35" x2="48.26" y2="6.35" width="0.6096" layer="16"/>
+<polygon width="0.1524" layer="1" isolate="0.3048">
+<vertex x="1.27" y="57.15"/>
+<vertex x="1.27" y="1.27"/>
+<vertex x="67.31" y="1.27"/>
+<vertex x="67.31" y="57.15"/>
+</polygon>
+<polygon width="0.1524" layer="16" isolate="0.3048">
+<vertex x="1.27" y="57.15"/>
+<vertex x="1.27" y="1.27"/>
+<vertex x="67.31" y="1.27"/>
+<vertex x="67.31" y="57.15"/>
+</polygon>
 </signal>
 <signal name="SPST1">
 <contactref element="S1" pad="P$2"/>
