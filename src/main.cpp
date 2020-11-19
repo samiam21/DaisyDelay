@@ -38,6 +38,7 @@ void setup()
     hw = DAISY.init(DAISY_SEED, AUDIO_SR_96K);
     num_channels = hw.num_channels;
 
+#ifndef BYPASS_SELECTOR
     // Initialize the encoder pins
     pinMode(effectSelectorPin1, INPUT_PULLDOWN);
     pinMode(effectSelectorPin2, INPUT_PULLDOWN);
@@ -51,8 +52,11 @@ void setup()
     attachInterrupt(effectSelectorPin3, ReadSelectedEffect, CHANGE);
     attachInterrupt(effectSelectorPin4, ReadSelectedEffect, CHANGE);
 
-    // Read and set the selected effect
+    // Read the selected effect
     ReadSelectedEffect();
+#endif
+
+    // Set the current effect
     currentEffect = GetEffectObject(selectedEffectType);
 
     // Initialize and turn on the control LED
@@ -62,6 +66,7 @@ void setup()
 
 void loop()
 {
+#ifndef BYPASS_SELECTOR
     // Check if we have a new effect type and switch to the new state
     if (currentEffectType != selectedEffectType)
     {
@@ -79,6 +84,7 @@ void loop()
         // Update the current effect type now that we have switched
         currentEffectType = selectedEffectType;
     }
+#endif
 
     // Execute the effect loop commands
     currentEffect->Loop();

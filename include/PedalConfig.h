@@ -5,8 +5,19 @@
 
 #define DEBUG 1
 
-#define initDebugPrint() {if(DEBUG) Serial.begin(9600);}
-#define debugPrint(msg) {if(DEBUG) Serial.println(msg);}
+// NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
+// #define BYPASS_SELECTOR // Bypasses the effect selector
+
+#define initDebugPrint()        \
+    {                           \
+        if (DEBUG)              \
+            Serial.begin(9600); \
+    }
+#define debugPrint(msg)          \
+    {                            \
+        if (DEBUG)               \
+            Serial.println(msg); \
+    }
 
 const int controlLedPin = LED_BUILTIN; // Built in LED is LED_BUILTIN
 
@@ -29,15 +40,15 @@ const int effectSPDT2Pin1 = 10;
 const int effectSPDT2Pin2 = 11;
 
 // Pin Definitions - POT
-const int effectPotPin1   = 23;
-const int effectPotPin2   = 22;
-const int effectPotPin3   = 21;
-const int effectPotPin4   = 20;
+const int effectPotPin1 = 23;
+const int effectPotPin2 = 22;
+const int effectPotPin3 = 21;
+const int effectPotPin4 = 20;
 
 // Pin Definitions - LED
-const int effectLedPin1    = 16;
-const int effectLedPin2    = 17;
-const int effectLedPin3    = 15;
-const int effectLedPin4    = 18;
+const int effectLedPin1 = 16;
+const int effectLedPin2 = 17;
+const int effectLedPin3 = 15;
+const int effectLedPin4 = 18;
 
 #endif
