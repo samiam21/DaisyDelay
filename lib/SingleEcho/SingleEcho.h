@@ -59,54 +59,56 @@ static const int maxLevelKnobValue = 1024;
 static const float maxLevelValue = 1.0f;
 
 // Type constants
-enum DelayType 
+enum DelayType
 {
     QUARTER = 0,
     DOTTED_EIGHTH = 1,
     TRIPLET = 2,
+
+    DT_UNSET = 99
 };
 
-class SingleEcho: public IEffect
+class SingleEcho : public IEffect
 {
-    public:
-        void Setup(size_t pNumChannels);
-        void Cleanup();
-        void AudioCallback(float **in, float **out, size_t size);
-        void Loop();
-        String GetEffectName();
+public:
+    void Setup(size_t pNumChannels);
+    void Cleanup();
+    void AudioCallback(float **in, float **out, size_t size);
+    void Loop();
+    String GetEffectName();
 
-    private:
-        void TapTempoLoopControl();
-        void DecayLoopControl();
-        void LevelLoopControl();
-        void TypeSwitcherLoopControl();
-        void SetDecayValue(int knobReading);
-        void SetLevelValue(int knobReading);
-        void SetType();
+private:
+    void TapTempoLoopControl();
+    void DecayLoopControl();
+    void LevelLoopControl();
+    void TypeSwitcherLoopControl();
+    void SetDecayValue(int knobReading);
+    void SetLevelValue(int knobReading);
+    void SetType();
 
-        // Mutable parameters
-        DelayLine<float, delayMaxSize> del_line;
+    // Mutable parameters
+    DelayLine<float, delayMaxSize> del_line;
 
-        // Tap tempo mutables
-        size_t currentTempoSamples;
-        unsigned long tapTempoTime = 0;
-        TempoArray tempoArray;
+    // Tap tempo mutables
+    size_t currentTempoSamples;
+    unsigned long tapTempoTime = 0;
+    TempoArray tempoArray;
 
-        // Decay mutables
-        int decayKnobReading = 0;
-        float decayValue = 0.5f;
+    // Decay mutables
+    int decayKnobReading = 0;
+    float decayValue = 0.5f;
 
-        // Level mutables
-        int levelKnobReading = 0;
-        float levelValue = 0.5f;
+    // Level mutables
+    int levelKnobReading = 0;
+    float levelValue = 0.5f;
 
-        // Type switcher mutables
-        DelayType currentDelayType = QUARTER;
-        float tempoModifier = 1.0f;
+    // Type switcher mutables
+    DelayType currentDelayType = DT_UNSET;
+    float tempoModifier = 1.0f;
 
-        // Audio channels
-        const int audioInChannel = 0;
-        const int audioOutChannel = 0;
+    // Audio channels
+    const int audioInChannel = 0;
+    const int audioOutChannel = 0;
 };
 
 #endif

@@ -8,8 +8,8 @@ DaisyHardware hw;
 size_t num_channels;
 
 // Effect switching parameters
-volatile EffectType currentEffectType = UNSET;
-volatile EffectType selectedEffectType = UNSET;
+volatile EffectType currentEffectType = SINGLEECHO;
+volatile EffectType selectedEffectType = SINGLEECHO;
 IEffect *currentEffect;
 
 /**
@@ -38,6 +38,7 @@ void setup()
     hw = DAISY.init(DAISY_SEED, AUDIO_SR_96K);
     num_channels = hw.num_channels;
 
+#ifndef BYPASS_SELECTOR
     // Initialize the encoder pins
     pinMode(effectSelectorPin1, INPUT_PULLDOWN);
     pinMode(effectSelectorPin2, INPUT_PULLDOWN);
@@ -46,18 +47,22 @@ void setup()
 
     // Attach interrupts to each of the encoder pins
     //  the encoder is grey coded so only one of these will happen at a time
-    attachInterrupt(effectSelectorPin1, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin1, ReadSelectedEffect, RISING);
-    attachInterrupt(effectSelectorPin2, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin2, ReadSelectedEffect, RISING);
-    attachInterrupt(effectSelectorPin3, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin3, ReadSelectedEffect, RISING);
-    attachInterrupt(effectSelectorPin4, ReadSelectedEffect, FALLING);
-    attachInterrupt(effectSelectorPin4, ReadSelectedEffect, RISING);
+    attachInterrupt(effectSelectorPin1, ReadSelectedEffect, CHANGE);
+    attachInterrupt(effectSelectorPin2, ReadSelectedEffect, CHANGE);
+    attachInterrupt(effectSelectorPin3, ReadSelectedEffect, CHANGE);
+    attachInterrupt(effectSelectorPin4, ReadSelectedEffect, CHANGE);
 
-    // Read and set the selected effect
+    // Read the selected effect
     ReadSelectedEffect();
+#endif
+
+    // Set the current effect
     currentEffect = GetEffectObject(selectedEffectType);
+
+    // Start the effect
+    debugPrint("Starting: " + currentEffect->GetEffectName());
+    currentEffect->Setup(num_channels);
+    DAISY.begin((DaisyDuinoCallback)[](float **in, float **out, size_t size) { return currentEffect->AudioCallback(in, out, size); });
 
     // Initialize and turn on the control LED
     pinMode(controlLedPin, OUTPUT);
@@ -66,6 +71,7 @@ void setup()
 
 void loop()
 {
+#ifndef BYPASS_SELECTOR
     // Check if we have a new effect type and switch to the new state
     if (currentEffectType != selectedEffectType)
     {
@@ -83,6 +89,7 @@ void loop()
         // Update the current effect type now that we have switched
         currentEffectType = selectedEffectType;
     }
+#endif
 
     // Execute the effect loop commands
     currentEffect->Loop();

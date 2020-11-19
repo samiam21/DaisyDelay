@@ -42,6 +42,9 @@ void SingleEcho::Setup(size_t pNumChannels)
     pinMode(quarterDelayLedPin, OUTPUT);
     pinMode(dottedEighthLedPin, OUTPUT);
     pinMode(tripletLedPin, OUTPUT);
+
+    // Initialize the type
+    TypeSwitcherLoopControl();
 }
 
 // Clean up the parameters for mono delay
@@ -111,7 +114,7 @@ void SingleEcho::DecayLoopControl()
             //debugPrint("MAX!");
         }
         // Standard reading
-        else 
+        else
         {
             decayKnobReading = newDecayKnobReading;
             //debugPrint(newDecayKnobReading);
@@ -195,7 +198,7 @@ void SingleEcho::TapTempoLoopControl()
             // Set the new delay based on the calculated duration
             currentTempoSamples = ((96000 * (size_t)avg) / 2000) * tempoModifier;
             del_line.SetDelay(currentTempoSamples);
-        } 
+        }
         else
         {
             // Duration was too long, reset the array for new tempo calculations
@@ -228,7 +231,7 @@ void SingleEcho::TypeSwitcherLoopControl()
             // Set the delay type and tempo modifier
             currentDelayType = QUARTER;
             tempoModifier = 1.0f;
-            
+
             // Update the delay tempo
             del_line.SetDelay(currentTempoSamples * tempoModifier);
 
