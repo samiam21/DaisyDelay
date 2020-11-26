@@ -32,7 +32,7 @@ void setup()
 {
     // // Initialize the serial debug output
     initDebugPrint();
-    debugPrint("Starting DaisyPedal...");
+    debugPrintln("Starting DaisyPedal...");
 
     // Initialize Daisy at 96kHz
     hw = DAISY.init(DAISY_SEED, AUDIO_SR_96K);
@@ -60,7 +60,7 @@ void setup()
     currentEffect = GetEffectObject(selectedEffectType);
 
     // Start the effect
-    debugPrint("Starting: " + currentEffect->GetEffectName());
+    debugPrintln("Starting: " + currentEffect->GetEffectName());
     currentEffect->Setup(num_channels);
     DAISY.begin((DaisyDuinoCallback)[](float **in, float **out, size_t size) { return currentEffect->AudioCallback(in, out, size); });
 
@@ -82,7 +82,7 @@ void loop()
         currentEffect = GetEffectObject(selectedEffectType);
 
         // Start the new effect
-        debugPrint("Switching to: " + currentEffect->GetEffectName());
+        debugPrintln("Switching to: " + currentEffect->GetEffectName());
         currentEffect->Setup(num_channels);
         DAISY.begin((DaisyDuinoCallback)[](float **in, float **out, size_t size) { return currentEffect->AudioCallback(in, out, size); });
 

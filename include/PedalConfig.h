@@ -13,10 +13,15 @@
         if (DEBUG)              \
             Serial.begin(9600); \
     }
-#define debugPrint(msg)          \
+#define debugPrintln(msg)        \
     {                            \
         if (DEBUG)               \
             Serial.println(msg); \
+    }
+#define debugPrint(msg)        \
+    {                          \
+        if (DEBUG)             \
+            Serial.print(msg); \
     }
 
 const int controlLedPin = LED_BUILTIN; // Built in LED is LED_BUILTIN
