@@ -37,8 +37,7 @@ void SingleEcho::Setup(size_t pNumChannels)
     SetLevelValue(levelKnobReading);
 
     // Initialize the type pins
-    pinMode(typeSwitcherPin1, INPUT);
-    pinMode(typeSwitcherPin2, INPUT);
+    typeSwitcher.Init(typeSwitcherPin1, INPUT, typeSwitcherPin2, INPUT);
     pinMode(quarterDelayLedPin, OUTPUT);
     pinMode(dottedEighthLedPin, OUTPUT);
     pinMode(tripletLedPin, OUTPUT);
@@ -221,7 +220,7 @@ String SingleEcho::GetEffectName()
 void SingleEcho::TypeSwitcherLoopControl()
 {
     // Determine which type is selected
-    if (digitalRead(typeSwitcherPin1) == HIGH)
+    if (typeSwitcher.ReadToggle() == 0)
     {
         // Only set the type if we have a new one
         if (currentDelayType != QUARTER)
@@ -243,7 +242,7 @@ void SingleEcho::TypeSwitcherLoopControl()
             analogWrite(quarterDelayLedPin, ledIntensity);
         }
     }
-    else if (digitalRead(typeSwitcherPin2) == HIGH)
+    else if (typeSwitcher.ReadToggle() == 2)
     {
         // Only set the type if we have a new one
         if (currentDelayType != TRIPLET)

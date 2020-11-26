@@ -5,6 +5,7 @@
 #include "../../include/IEffect.h"
 #include "../../include/PedalConfig.h"
 #include "TempoArray.h"
+#include "../Inputs/NFNToggle.h"
 
 /**********************************************
  * Mono Delay Effect
@@ -85,6 +86,9 @@ private:
     void SetDecayValue(int knobReading);
     void SetLevelValue(int knobReading);
     void SetType();
+
+    // Input handlers
+    NFNToggle typeSwitcher;
 
     // Mutable parameters
     DelayLine<float, delayMaxSize> del_line;
