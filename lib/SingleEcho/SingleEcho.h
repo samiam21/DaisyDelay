@@ -6,6 +6,7 @@
 #include "../../include/PedalConfig.h"
 #include "TempoArray.h"
 #include "../Inputs/NFNToggle.h"
+#include "../Inputs/Knob.h"
 
 /**********************************************
  * Mono Delay Effect
@@ -51,6 +52,7 @@ static const size_t initialTempoBpm = 90;
 static const int decayKnobFlutter = 10;
 static const int minDecayKnobValue = 0;
 static const int maxDecayKnobValue = 1024;
+static const int minDecayValue = 0.0f;
 static const float maxDecayValue = 0.75f;
 
 // Level constants
@@ -89,6 +91,8 @@ private:
 
     // Input handlers
     NFNToggle typeSwitcher;
+    Knob effectLevel;
+    Knob decay;
 
     // Mutable parameters
     DelayLine<float, delayMaxSize> del_line;
@@ -109,10 +113,6 @@ private:
     // Type switcher mutables
     DelayType currentDelayType = DT_UNSET;
     float tempoModifier = 1.0f;
-
-    // Audio channels
-    const int audioInChannel = 0;
-    const int audioOutChannel = 0;
 };
 
 #endif

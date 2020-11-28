@@ -26,15 +26,12 @@ void SingleEcho::Setup(size_t pNumChannels)
 
     // Initialize the tap tempo button
     pinMode(tapTempoButtonPin, INPUT);
-    pinMode(decayKnobPin, INPUT);
 
     // Initialize the decay
-    decayKnobReading = analogRead(decayKnobPin);
-    SetDecayValue(decayKnobReading);
+    decay.Init(decayKnobPin, INPUT, decayValue, minDecayValue, maxDecayValue);
 
     // Initialize the level
-    levelKnobReading = analogRead(levelKnobPin);
-    SetLevelValue(levelKnobReading);
+    effectLevel.Init(levelKnobPin, INPUT, levelValue);
 
     // Initialize the type pins
     typeSwitcher.Init(typeSwitcherPin1, INPUT, typeSwitcherPin2, INPUT);
@@ -79,98 +76,22 @@ void SingleEcho::Loop()
     // Handle tap tempo
     TapTempoLoopControl();
 
-    // Handle decay
-    DecayLoopControl();
+    // Update the decay if the knob has been moved
+    if (decay.SetNewValue(decayValue))
+    {
+        debugPrint("Updated the decay to: ");
+        debugPrintln(decayValue);
+    }
 
-    // Handle level
-    LevelLoopControl();
+    // Update the effect level if the knob has been moved
+    if (effectLevel.SetNewValue(levelValue))
+    {
+        debugPrint("Updated the effect level to: ");
+        debugPrintln(levelValue);
+    }
 
     // Handle type
     TypeSwitcherLoopControl();
-}
-
-// Handle reading the decay knob and setting the decay
-void SingleEcho::DecayLoopControl()
-{
-    // Read the decay knob
-    int newDecayKnobReading = analogRead(decayKnobPin);
-
-    // Account for flutter so we aren't constantly changing the decay
-    if (newDecayKnobReading > (decayKnobReading + decayKnobFlutter) || newDecayKnobReading < (decayKnobReading - decayKnobFlutter))
-    {
-        // Check for min value, accounting for flutter
-        if (newDecayKnobReading <= (minDecayKnobValue + decayKnobFlutter))
-        {
-            // Set the decay to min
-            decayKnobReading = minDecayKnobValue;
-            //debugPrint("MIN!");
-        }
-        // Check for max value, accounting for flutter
-        else if (newDecayKnobReading >= (maxDecayKnobValue - decayKnobFlutter))
-        {
-            // Set the decay to max
-            decayKnobReading = maxDecayKnobValue;
-            //debugPrint("MAX!");
-        }
-        // Standard reading
-        else
-        {
-            decayKnobReading = newDecayKnobReading;
-            //debugPrint(newDecayKnobReading);
-        }
-
-        // Set the new decay value
-        SetDecayValue(newDecayKnobReading);
-        //debugPrint(decayValue);
-    }
-}
-
-// Sets the decay value based on the passed in knob reading
-void SingleEcho::SetDecayValue(int knobReading)
-{
-    decayValue = ((float)knobReading / (float)maxDecayKnobValue) * maxDecayValue;
-}
-
-// Handle reading the level knob and setting the level
-void SingleEcho::LevelLoopControl()
-{
-    // Read the level knob
-    int newLevelKnobReading = analogRead(levelKnobPin);
-
-    // Account for flutter so we aren't constantly changing the level
-    if (newLevelKnobReading > (levelKnobReading + levelKnobFlutter) || newLevelKnobReading < (levelKnobReading - levelKnobFlutter))
-    {
-        // Check for min value, accounting for flutter
-        if (newLevelKnobReading <= (minLevelKnobValue + levelKnobFlutter))
-        {
-            // Set the level to min
-            levelKnobReading = minLevelKnobValue;
-            //debugPrint("MIN!");
-        }
-        // Check for max value, accounting for flutter
-        else if (newLevelKnobReading >= (maxLevelKnobValue - levelKnobFlutter))
-        {
-            // Set the level to max
-            levelKnobReading = maxLevelKnobValue;
-            //debugPrint("MAX!");
-        }
-        // Standard reading
-        else
-        {
-            levelKnobReading = newLevelKnobReading;
-            //debugPrint(newLevelKnobReading);
-        }
-
-        // Set the new level value
-        SetLevelValue(newLevelKnobReading);
-        //debugPrint(levelValue);
-    }
-}
-
-// Sets the level value based on the passed in knob reading
-void SingleEcho::SetLevelValue(int knobReading)
-{
-    levelValue = ((float)knobReading / (float)maxLevelKnobValue) * maxLevelValue;
 }
 
 // Handle reading the tap tempo button and setting the tempo
