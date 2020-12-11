@@ -4,6 +4,9 @@
 #include "DaisyDuino.h"
 #include "../../include/IEffect.h"
 #include "../../include/PedalConfig.h"
+#include "../Inputs/Button.h"
+#include "../Inputs/Knob.h"
+#include "../Inputs/NFNToggle.h"
 
 /**********************************************
  * HWTest Effect
@@ -37,11 +40,30 @@ public:
     String GetEffectName();
 
 private:
+    void Button3Interrupt();
+
     size_t numChannels;
     const int LED_MAX_VALUE = 256;
     const int LED_MIN_VALUE = 0;
+
+    // Audio channels
     const int audioInChannel = 0;
     const int audioOutChannel = 0;
+
+    bool isLed3On = false;
+    float led1Value = 0.0f;
+    float led2Value = 0.0f;
+    float volumeBoost = 0.0f;
+
+    Button button1;
+    Button button2;
+    Button button3;
+
+    Knob knob1;
+    Knob knob2;
+    Knob knob3;
+
+    NFNToggle toggle;
 };
 
 #endif

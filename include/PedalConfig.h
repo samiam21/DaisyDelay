@@ -13,13 +13,24 @@
         if (DEBUG)              \
             Serial.begin(9600); \
     }
-#define debugPrint(msg)          \
+#define debugPrintln(msg)        \
     {                            \
         if (DEBUG)               \
             Serial.println(msg); \
     }
+#define debugPrint(msg)        \
+    {                          \
+        if (DEBUG)             \
+            Serial.print(msg); \
+    }
 
 const int controlLedPin = LED_BUILTIN; // Built in LED is LED_BUILTIN
+
+// Audio channels
+const int audioInChannel = 0;
+const int audioOutChannel = 0;
+const int audioInStereoChannel = -1;
+const int audioOutStereoChannel = -1;
 
 // Pin Definitions - Selector
 const int effectSelectorPin1 = 29;
