@@ -18,7 +18,8 @@ void Button::Init(uint32_t pin, uint32_t pMode, callback_function_t callback, ui
     pinMode(buttonPin, pMode);
 
     // Attach the local interrupt handler
-    attachInterrupt(buttonPin, [this, callback]() {return LocalInterruptHandler(callback);}, pInterruptMode);
+    attachInterrupt(
+        buttonPin, [this, callback]() { return LocalInterruptHandler(callback); }, pInterruptMode);
 }
 
 void Button::DetachInterrupt()

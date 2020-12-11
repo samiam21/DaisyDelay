@@ -7,6 +7,7 @@
 #include "TempoArray.h"
 #include "../Inputs/NFNToggle.h"
 #include "../Inputs/Knob.h"
+#include "../Inputs/Button.h"
 
 /**********************************************
  * Mono Delay Effect
@@ -45,20 +46,14 @@ static const size_t delayMaxSize = 96000;
 static const size_t ledIntensity = 128;
 
 // Tap tempo constants
-static const long tapTempoDebounce = 300;
 static const size_t initialTempoBpm = 90;
 
 // Decay constants
-static const int decayKnobFlutter = 10;
-static const int minDecayKnobValue = 0;
-static const int maxDecayKnobValue = 1024;
-static const int minDecayValue = 0.0f;
+static const float minDecayValue = 0.0f;
 static const float maxDecayValue = 0.75f;
 
 // Level constants
-static const int levelKnobFlutter = 10;
-static const int minLevelKnobValue = 0;
-static const int maxLevelKnobValue = 1024;
+static const float minLevelValue = 0.0f;
 static const float maxLevelValue = 1.0f;
 
 // Type constants
@@ -93,6 +88,7 @@ private:
     NFNToggle typeSwitcher;
     Knob effectLevel;
     Knob decay;
+    Button tapTempoButton;
 
     // Mutable parameters
     DelayLine<float, delayMaxSize> del_line;

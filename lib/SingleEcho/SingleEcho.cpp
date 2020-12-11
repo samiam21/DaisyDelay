@@ -25,13 +25,14 @@ void SingleEcho::Setup(size_t pNumChannels)
     del_line.SetDelay(currentTempoSamples);
 
     // Initialize the tap tempo button
-    pinMode(tapTempoButtonPin, INPUT);
+    tapTempoButton.Init(
+        tapTempoButtonPin, INPUT, [this]() { return TapTempoLoopControl(); }, RISING);
 
     // Initialize the decay
     decay.Init(decayKnobPin, INPUT, decayValue, minDecayValue, maxDecayValue);
 
     // Initialize the level
-    effectLevel.Init(levelKnobPin, INPUT, levelValue);
+    effectLevel.Init(levelKnobPin, INPUT, levelValue, minLevelValue, maxLevelValue);
 
     // Initialize the type pins
     typeSwitcher.Init(typeSwitcherPin1, INPUT, typeSwitcherPin2, INPUT);
@@ -73,9 +74,6 @@ void SingleEcho::AudioCallback(float **in, float **out, size_t size)
 // Logic for mono delay to add into the main loop
 void SingleEcho::Loop()
 {
-    // Handle tap tempo
-    TapTempoLoopControl();
-
     // Update the decay if the knob has been moved
     if (decay.SetNewValue(decayValue))
     {
@@ -94,41 +92,34 @@ void SingleEcho::Loop()
     TypeSwitcherLoopControl();
 }
 
-// Handle reading the tap tempo button and setting the tempo
+// Interrupt handler for the tap tempo button to set the tempo
 void SingleEcho::TapTempoLoopControl()
 {
-    // Read the tap tempo button
-    int reading = digitalRead(tapTempoButtonPin);
+    debugPrintln("tap tempo button pressed");
 
-    // Debounce the button and check for it pressed
-    if (reading == HIGH && millis() - tapTempoTime > tapTempoDebounce)
+    // Calculate the duration (ignore a duration longer than 2 seconds)
+    unsigned long duration = millis() - tapTempoTime;
+    if (duration < 2000)
     {
-        //debugPrint("tap tempo button pressed");
+        // Add the duration to the tempo array (cast is safe because duration will never be greater than 2000)
+        tempoArray.push(duration);
 
-        // Calculate the duration (ignore a duration longer than 2 seconds)
-        unsigned long duration = millis() - tapTempoTime;
-        if (duration < 2000)
-        {
-            // Add the duration to the tempo array (cast is safe because duration will never be greater than 2000)
-            tempoArray.push(duration);
+        // Calculate the average duration of the items in the array
+        unsigned long avg = tempoArray.average();
 
-            // Calculate the average duration of the items in the array
-            unsigned long avg = tempoArray.average();
-
-            // Set the new delay based on the calculated duration
-            currentTempoSamples = ((96000 * (size_t)avg) / 2000) * tempoModifier;
-            del_line.SetDelay(currentTempoSamples);
-        }
-        else
-        {
-            // Duration was too long, reset the array for new tempo calculations
-            tempoArray.clear();
-            //debugPrint("Cleared the tempo array");
-        }
-
-        // Update the time
-        tapTempoTime = millis();
+        // Set the new delay based on the calculated duration
+        currentTempoSamples = ((96000 * (size_t)avg) / 2000) * tempoModifier;
+        del_line.SetDelay(currentTempoSamples);
     }
+    else
+    {
+        // Duration was too long, reset the array for new tempo calculations
+        tempoArray.clear();
+        //debugPrint("Cleared the tempo array");
+    }
+
+    // Update the time
+    tapTempoTime = millis();
 }
 
 // Return the effect name (for debugging)
@@ -146,7 +137,7 @@ void SingleEcho::TypeSwitcherLoopControl()
         // Only set the type if we have a new one
         if (currentDelayType != QUARTER)
         {
-            debugPrint("Changing to quarter note delay");
+            debugPrintln("Changing to quarter note delay");
 
             // Set the delay type and tempo modifier
             currentDelayType = QUARTER;
@@ -168,7 +159,7 @@ void SingleEcho::TypeSwitcherLoopControl()
         // Only set the type if we have a new one
         if (currentDelayType != TRIPLET)
         {
-            debugPrint("Changing to triplet note delay");
+            debugPrintln("Changing to triplet note delay");
 
             // Set the delay type and tempo modifier
             currentDelayType = TRIPLET;
@@ -190,7 +181,7 @@ void SingleEcho::TypeSwitcherLoopControl()
         // Only set the type if we have a new one
         if (currentDelayType != DOTTED_EIGHTH)
         {
-            debugPrint("Changing to dotted eighth note delay");
+            debugPrintln("Changing to dotted eighth note delay");
 
             // Set the delay type and tempo modifier
             currentDelayType = DOTTED_EIGHTH;
