@@ -26,13 +26,16 @@ void SingleEcho::Setup(size_t pNumChannels)
 
     // Initialize the tap tempo button
     tapTempoButton.Init(
-        tapTempoButtonPin, INPUT, [this]() { return TapTempoLoopControl(); }, RISING);
+        tapTempoButtonPin, INPUT, [this]() { return TapTempoInterruptHandler(); }, RISING);
 
     // Initialize the decay
     decay.Init(decayKnobPin, INPUT, decayValue, minDecayValue, maxDecayValue);
 
     // Initialize the level
     effectLevel.Init(levelKnobPin, INPUT, levelValue, minLevelValue, maxLevelValue);
+
+    // Initialize the volume boost
+    volumeBoost.Init(volumeBoostPin, INPUT, volumeBoostLevel);
 
     // Initialize the type pins
     typeSwitcher.Init(typeSwitcherPin1, INPUT, typeSwitcherPin2, INPUT);
@@ -67,7 +70,7 @@ void SingleEcho::AudioCallback(float **in, float **out, size_t size)
         del_line.Write((wet * decayValue) + dry);
 
         // Mix Dry and Wet and send to I/O
-        out[audioOutChannel][i] = (wet * levelValue) + dry;
+        out[audioOutChannel][i] = ((wet * levelValue) + dry) * (volumeBoostLevel * boostMultiplier + boostAdder);
     }
 }
 
@@ -88,12 +91,19 @@ void SingleEcho::Loop()
         debugPrintln(levelValue);
     }
 
+    // Update the volume boost level if the knob has been moved
+    if (volumeBoost.SetNewValue(volumeBoostLevel))
+    {
+        debugPrint("Updated the volume boost level to: ");
+        debugPrintln(volumeBoostLevel);
+    }
+
     // Handle type
     TypeSwitcherLoopControl();
 }
 
 // Interrupt handler for the tap tempo button to set the tempo
-void SingleEcho::TapTempoLoopControl()
+void SingleEcho::TapTempoInterruptHandler()
 {
     debugPrintln("tap tempo button pressed");
 
