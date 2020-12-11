@@ -22,7 +22,7 @@
  * 
  * Knob 1 - Effect Level
  * Knob 2 - Decay
- * Knob 3 - N/U
+ * Knob 3 - Volume Boost
  * Knob 4 - N/U
  * 
  * LED 1 - Quarter
@@ -35,6 +35,7 @@
 static const int tapTempoButtonPin = effectSPSTPin1;
 static const int levelKnobPin = effectPotPin1;
 static const int decayKnobPin = effectPotPin2;
+static const int volumeBoostPin = effectPotPin3;
 static const int typeSwitcherPin1 = effectSPDT1Pin1;
 static const int typeSwitcherPin2 = effectSPDT1Pin2;
 static const int quarterDelayLedPin = effectLedPin1;
@@ -56,6 +57,10 @@ static const float maxDecayValue = 0.75f;
 static const float minLevelValue = 0.0f;
 static const float maxLevelValue = 1.0f;
 
+// Volume boost constants
+static const float boostMultiplier = 4.0f;
+static const float boostAdder = 1.0f;
+
 // Type constants
 enum DelayType
 {
@@ -76,7 +81,7 @@ public:
     String GetEffectName();
 
 private:
-    void TapTempoLoopControl();
+    void TapTempoInterruptHandler();
     void DecayLoopControl();
     void LevelLoopControl();
     void TypeSwitcherLoopControl();
@@ -88,23 +93,19 @@ private:
     NFNToggle typeSwitcher;
     Knob effectLevel;
     Knob decay;
+    Knob volumeBoost;
     Button tapTempoButton;
 
     // Mutable parameters
     DelayLine<float, delayMaxSize> del_line;
+    float decayValue = 0.5f;
+    float levelValue = 0.5f;
+    float volumeBoostLevel = 0.0f;
 
     // Tap tempo mutables
     size_t currentTempoSamples;
     unsigned long tapTempoTime = 0;
     TempoArray tempoArray;
-
-    // Decay mutables
-    int decayKnobReading = 0;
-    float decayValue = 0.5f;
-
-    // Level mutables
-    int levelKnobReading = 0;
-    float levelValue = 0.5f;
 
     // Type switcher mutables
     DelayType currentDelayType = DT_UNSET;
