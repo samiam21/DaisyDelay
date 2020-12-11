@@ -4,15 +4,20 @@ void HWTest::Setup(size_t pNumChannels)
 {
     numChannels = pNumChannels;
 
-    // Initialize the LEDs and buttons
-    pinMode(effectSPSTPin1, INPUT);
-    pinMode(effectSPSTPin2, INPUT);
-    pinMode(effectSPSTPin3, INPUT);
-    pinMode(effectSPDT1Pin1, INPUT);
-    pinMode(effectSPDT1Pin2, INPUT);
-    pinMode(effectPotPin1, INPUT);
-    pinMode(effectPotPin2, INPUT);
-    pinMode(effectPotPin3, INPUT);
+    // Initialize the buttons
+    button1.Init(effectSPSTPin1, INPUT);
+    button2.Init(effectSPSTPin2, INPUT);
+    button3.Init(effectSPSTPin3, INPUT, [this](){ return Button3Interrupt(); }, RISING);
+
+    // Initialize the knobs
+    knob1.Init(effectPotPin1, INPUT, led1Value);
+    knob2.Init(effectPotPin2, INPUT, led2Value);
+    knob3.Init(effectPotPin3, INPUT, volumeBoost);
+
+    // Initialize the toggle
+    toggle.Init(effectSPDT1Pin1, INPUT, effectSPDT1Pin2, INPUT);
+
+    // Initialize the LEDs
     pinMode(effectLedPin1, OUTPUT);
     pinMode(effectLedPin2, OUTPUT);
     pinMode(effectLedPin3, OUTPUT);
@@ -22,14 +27,14 @@ void HWTest::AudioCallback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
-        out[audioOutChannel][i] = in[audioInChannel][i];
+        out[audioOutChannel][i] = in[audioInChannel][i] * (volumeBoost * 4.0 + 1.0f);
     }
 }
 
 void HWTest::Cleanup()
 {
     // Turn off the LEDs
-    debugPrint("Turning off LEDs");
+    debugPrintln("Turning off LEDs");
     pinMode(effectLedPin1, OUTPUT);
     pinMode(effectLedPin2, OUTPUT);
     pinMode(effectLedPin3, OUTPUT);
@@ -41,10 +46,10 @@ void HWTest::Cleanup()
 void HWTest::Loop()
 {
     // SPDT controls whether the LEDs are turned on by buttons or POTs
-    if (digitalRead(effectSPDT1Pin1) == HIGH)
+    if (toggle.ReadToggle() == 0)
     {
         // Button1 turns on LED 1
-        if (digitalRead(effectSPSTPin1) == HIGH)
+        if (button1.IsPressed(false))
         {
             analogWrite(effectLedPin1, LED_MAX_VALUE);
         }
@@ -54,7 +59,7 @@ void HWTest::Loop()
         }
 
         // Button 2 turns on LED 2
-        if (digitalRead(effectSPSTPin2) == HIGH)
+        if (button2.IsPressed(false))
         {
             analogWrite(effectLedPin2, LED_MAX_VALUE);
         }
@@ -62,37 +67,45 @@ void HWTest::Loop()
         {
             analogWrite(effectLedPin2, LED_MIN_VALUE);
         }
-
-        // Button 3 turns on LED 3
-        if (digitalRead(effectSPSTPin3) == HIGH)
-        {
-            analogWrite(effectLedPin3, LED_MAX_VALUE);
-        }
-        else
-        {
-            analogWrite(effectLedPin3, LED_MIN_VALUE);
-        }
     }
-    else if (digitalRead(effectSPDT1Pin2) == HIGH)
+    else if (toggle.ReadToggle() == 2)
     {
         // Knob 1 controls intensity of LED 1
-        // Turn on the LED, at the level dictated by the knob
-        //  (map the 10bit input value to an 8 bit PWM output)
-        analogWrite(effectLedPin1, analogRead(effectPotPin1) / 4);
+        if (knob1.SetNewValue(led1Value))
+        {
+            // Write the new value to the LED
+            analogWrite(effectLedPin1, led1Value * LED_MAX_VALUE);
+
+            debugPrint("Updated the LED 1 level to: ");
+            debugPrintln(led1Value);
+        }
 
         // Knob 2 controls intensity of LED 2
-        // Turn on the LED, at the level dictated by the knob
-        //  (map the 10bit input value to an 8 bit PWM output)
-        analogWrite(effectLedPin2, analogRead(effectPotPin2) / 4);
+        if (knob2.SetNewValue(led2Value))
+        {
+            // Write the new value to the LED
+            analogWrite(effectLedPin2, led2Value * LED_MAX_VALUE);
 
-        // Knob 3 controls intensity of LED 3
-        // Turn on the LED, at the level dictated by the knob
-        //  (map the 10bit input value to an 8 bit PWM output)
-        analogWrite(effectLedPin3, analogRead(effectPotPin3) / 4);
+            debugPrint("Updated the LED 2 level to: ");
+            debugPrintln(led2Value);
+        }
+    }
+
+    // Knob 3 controls the volume boost
+    if (knob3.SetNewValue(volumeBoost))
+    {
+        debugPrint("Updated the volume boost level to: ");
+        debugPrintln(volumeBoost);
     }
 }
 
 String HWTest::GetEffectName()
 {
     return "Hardware Test";
+}
+
+void HWTest::Button3Interrupt()
+{
+    isLed3On = !isLed3On;
+    digitalWrite(effectLedPin3, (int)isLed3On);
 }
