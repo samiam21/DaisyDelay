@@ -46,7 +46,9 @@ private:
     const int audioInChannel = 0;
     const int audioOutChannel = 0;
 
-    float volumeBoost = 0.0f;
+    const float boostLevelMin = 30.0f;
+    const float boostLevelMax = 60.0f;
+    float boostLevel = 0.0f;
 
     Knob knob1;
 };

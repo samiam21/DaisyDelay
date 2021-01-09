@@ -2,6 +2,7 @@
 #include "DaisyDuino.h"
 #include "EffectType.h"
 #include "PedalConfig.h"
+#include "utility/hid_audio.h"
 
 // Global variables
 DaisyHardware hw;
@@ -39,13 +40,16 @@ bool ReadSelectedEffect()
 
 void setup()
 {
-    // // Initialize the serial debug output
+    // Initialize the serial debug output
     initDebugPrint();
     debugPrintln("Starting DaisyPedal...");
 
-    // Initialize Daisy at 96kHz
-    hw = DAISY.init(DAISY_SEED, AUDIO_SR_96K);
+    // Initialize Daisy
+    hw = DAISY.init(DAISY_SEED, DAISY_SAMPLE_RATE);
     num_channels = hw.num_channels;
+
+    // Update the block size to minimize noise
+    dsy_audio_set_blocksize(DSY_AUDIO_INTERNAL, BLOCKSIZE);
 
 #ifndef BYPASS_SELECTOR
     // Initialize the encoder pins
