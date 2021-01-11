@@ -5,7 +5,7 @@ void SimpleBypass::Setup(size_t pNumChannels)
     numChannels = pNumChannels;
 
     // Initialize the knobs
-    knob1.Init(effectPotPin1, INPUT, volumeBoost);
+    knob1.Init(effectPotPin1, INPUT, boostLevel, boostLevelMin, boostLevelMax);
 
     // Initialize the LEDs
     pinMode(effectLedPin1, OUTPUT);
@@ -17,7 +17,7 @@ void SimpleBypass::AudioCallback(float **in, float **out, size_t size)
 {
     for (size_t i = 0; i < size; i++)
     {
-        out[audioOutChannel][i] = in[audioInChannel][i] * (volumeBoost * 4.0 + 1.0f);
+        out[audioOutChannel][i] = in[audioInChannel][i] * boostLevel;
     }
 }
 
@@ -35,11 +35,11 @@ void SimpleBypass::Cleanup()
 
 void SimpleBypass::Loop()
 {
-    // Knob 1 controls the volume boost
-    if (knob1.SetNewValue(volumeBoost))
+    // Knob 1 controls the boost
+    if (knob1.SetNewValue(boostLevel))
     {
-        debugPrint("Updated the volume boost level to: ");
-        debugPrintln(volumeBoost);
+        debugPrint("Updated the boost level to: ");
+        debugPrintlnF(boostLevel, 5);
     }
 }
 

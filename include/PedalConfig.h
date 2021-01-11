@@ -5,6 +5,9 @@
 
 #define DEBUG 1
 
+#define BLOCKSIZE 5
+#define DAISY_SAMPLE_RATE AUDIO_SR_96K
+
 // NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
 #define BYPASS_SELECTOR // Bypasses the effect selector
 
@@ -23,6 +26,18 @@
         if (DEBUG)             \
             Serial.print(msg); \
     }
+#define debugPrintlnF(msg, decimalPlaces)       \
+    {                                           \
+        if (DEBUG)                              \
+            Serial.println(msg, decimalPlaces); \
+    }
+#define debugPrintF(msg, decimalPlaces)       \
+    {                                         \
+        if (DEBUG)                            \
+            Serial.print(msg, decimalPlaces); \
+    }
+
+#define PI_VAL 3.14159265
 
 const int controlLedPin = LED_BUILTIN; // Built in LED is LED_BUILTIN
 
