@@ -5,7 +5,7 @@
 
 #define DEBUG 1
 
-#define BLOCKSIZE 5
+#define BLOCKSIZE 1
 #define DAISY_SAMPLE_RATE AUDIO_SR_96K
 
 // NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
