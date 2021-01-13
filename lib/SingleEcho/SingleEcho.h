@@ -58,8 +58,8 @@ static const float minLevelValue = 0.0f;
 static const float maxLevelValue = 1.0f;
 
 // Volume boost constants
-static const float boostMultiplier = 4.0f;
-static const float boostAdder = 1.0f;
+static const float boostMinValue = 1.0f;
+static const float boostMaxValue = 10.0f;
 
 // Type constants
 enum DelayType

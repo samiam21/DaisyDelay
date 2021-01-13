@@ -35,7 +35,7 @@ void SingleEcho::Setup(size_t pNumChannels)
     effectLevel.Init(levelKnobPin, INPUT, levelValue, minLevelValue, maxLevelValue);
 
     // Initialize the volume boost
-    volumeBoost.Init(volumeBoostPin, INPUT, volumeBoostLevel);
+    volumeBoost.Init(volumeBoostPin, INPUT, volumeBoostLevel, boostMinValue, boostMaxValue);
 
     // Initialize the type pins
     typeSwitcher.Init(typeSwitcherPin1, INPUT, typeSwitcherPin2, INPUT);
@@ -61,7 +61,7 @@ void SingleEcho::AudioCallback(float **in, float **out, size_t size)
         float dry, wet;
 
         // Read Dry from I/O
-        dry = in[audioInChannel][i];
+        dry = in[audioInChannel][i] * volumeBoostLevel;
 
         // Read Wet from Delay Line
         wet = del_line.Read();
@@ -70,7 +70,7 @@ void SingleEcho::AudioCallback(float **in, float **out, size_t size)
         del_line.Write((wet * decayValue) + dry);
 
         // Mix Dry and Wet and send to I/O
-        out[audioOutChannel][i] = ((wet * levelValue) + dry) * (volumeBoostLevel * boostMultiplier + boostAdder);
+        out[audioOutChannel][i] = ((wet * levelValue) + dry);
     }
 }
 
