@@ -5,6 +5,12 @@
 
 #define DEBUG 1
 
+#define BLOCKSIZE 1
+#define DAISY_SAMPLE_RATE AUDIO_SR_96K
+
+#define AUDIO_IN_CH 1
+#define AUDIO_OUT_CH 0
+
 // NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
 #define BYPASS_SELECTOR // Bypasses the effect selector
 
@@ -23,14 +29,20 @@
         if (DEBUG)             \
             Serial.print(msg); \
     }
+#define debugPrintlnF(msg, decimalPlaces)       \
+    {                                           \
+        if (DEBUG)                              \
+            Serial.println(msg, decimalPlaces); \
+    }
+#define debugPrintF(msg, decimalPlaces)       \
+    {                                         \
+        if (DEBUG)                            \
+            Serial.print(msg, decimalPlaces); \
+    }
+
+#define PI_VAL 3.14159265
 
 const int controlLedPin = LED_BUILTIN; // Built in LED is LED_BUILTIN
-
-// Audio channels
-const int audioInChannel = 0;
-const int audioOutChannel = 0;
-const int audioInStereoChannel = -1;
-const int audioOutStereoChannel = -1;
 
 // Pin Definitions - Selector
 const int effectSelectorPin1 = 29;
