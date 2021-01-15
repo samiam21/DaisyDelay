@@ -8,6 +8,9 @@
 #define BLOCKSIZE 1
 #define DAISY_SAMPLE_RATE AUDIO_SR_96K
 
+#define AUDIO_IN_CH 1
+#define AUDIO_OUT_CH 0
+
 // NOTE: If you bypass the selector, make sure the selectedEffectType in main.cpp is set to the desired effect
 #define BYPASS_SELECTOR // Bypasses the effect selector
 
