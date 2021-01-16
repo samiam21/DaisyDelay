@@ -3,7 +3,7 @@
 
 #include "DaisyDuino.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define BLOCKSIZE 1
 #define DAISY_SAMPLE_RATE AUDIO_SR_96K

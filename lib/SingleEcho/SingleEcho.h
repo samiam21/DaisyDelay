@@ -32,12 +32,12 @@
  **********************************************/
 
 // Pin renaming
-static const int tapTempoButtonPin = effectSPSTPin1;
-static const int levelKnobPin = effectPotPin1;
+static const int tapTempoButtonPin = effectSPSTPin4;
+static const int levelKnobPin = effectPotPin4;
 static const int decayKnobPin = effectPotPin2;
 static const int volumeBoostPin = effectPotPin3;
-static const int typeSwitcherPin1 = effectSPDT1Pin1;
-static const int typeSwitcherPin2 = effectSPDT1Pin2;
+static const int typeSwitcherPin1 = effectSPDT2Pin1;
+static const int typeSwitcherPin2 = effectSPDT2Pin2;
 static const int quarterDelayLedPin = effectLedPin1;
 static const int dottedEighthLedPin = effectLedPin2;
 static const int tripletLedPin = effectLedPin3;
