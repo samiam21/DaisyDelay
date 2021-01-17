@@ -50,16 +50,16 @@ static const size_t ledIntensity = 128;
 static const size_t initialTempoBpm = 90;
 
 // Decay constants
-static const float minDecayValue = 0.0f;
-static const float maxDecayValue = 0.75f;
+static const float minDecayValue = 0.75f;
+static const float maxDecayValue = 0.0f;
 
 // Level constants
-static const float minLevelValue = 0.0f;
-static const float maxLevelValue = 1.0f;
+static const float minLevelValue = 1.0f;
+static const float maxLevelValue = 0.0f;
 
 // Volume boost constants
-static const float boostMinValue = 1.0f;
-static const float boostMaxValue = 10.0f;
+static const float boostMinValue = 7.0f;
+static const float boostMaxValue = 1.0f;
 
 // Type constants
 enum DelayType
